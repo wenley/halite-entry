@@ -31,12 +31,20 @@ public class GrowthStrategy {
           insert(x, y, Direction.STILL, 1.0);
         }
 
+        // Move towards neutral territory when you can take it over
         for (Direction direction : Direction.CARDINALS) {
           Site otherSite = gameMap.getSite(gameMap.getLocation(myLocation, direction));
           if (otherSite.owner == 0 && otherSite.strength < site.strength) {
             insert(x, y, direction, 1.0);
           }
         }
+
+        // When surrounded by enemies, move towards their center
+        long numAdjacentEnemies = Arrays.stream(Direction.CARDINALS)
+          .map(direction -> gameMap.getSite(gameMap.getLocation(gameMap.getLocation(myLocation, direction), direction)))
+          .map(otherSite -> otherSite.owner)
+          .filter(owner -> owner != 0 && owner != myID)
+          .count();
       }
     }
   }
