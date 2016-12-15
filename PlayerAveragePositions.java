@@ -47,6 +47,7 @@ class PlayerAveragePositions {
   }
 
   /** On the torus, where is the strength-weighted average position of each player? */
+  // TODO: How to make this torus-sensitive?
   private void computeSinkLocations() {
     Logger.log("Computing player locations...");
     long[] weightedX = new long[playerCount + 1];
