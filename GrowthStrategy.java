@@ -5,14 +5,16 @@ import java.util.Map;
 
 public class GrowthStrategy {
   private final GameMap gameMap;
+  private final Torus torus;
   private final int myID;
   private final int playerCount;
 
   // x coordinate -> y coordinate -> direction -> weight of recommendation [0.0, Infinity)
   private final Map<Integer, Map<Integer, Map<Direction, Double>>> moveMap = new HashMap<>();
 
-  public GrowthStrategy(GameMap gameMap, int myID, int playerCount) {
+  public GrowthStrategy(GameMap gameMap, Torus torus, int myID, int playerCount) {
     this.gameMap = gameMap;
+    this.torus = torus;
     this.myID = myID;
     this.playerCount = playerCount;
 

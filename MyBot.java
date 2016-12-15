@@ -8,6 +8,7 @@ public class MyBot {
     InitPackage iPackage = Networking.getInit();
     int myID = iPackage.myID;
     GameMap gameMap = iPackage.map;
+    Torus torus = new Torus(gameMap.width, gameMap.height);
     GrowthStrategy strategy;
 
     Networking.sendInit("MyJavaBot");
