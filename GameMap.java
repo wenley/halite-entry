@@ -1,5 +1,8 @@
 import java.util.ArrayList;
-public class GameMap{
+import java.util.HashMap;
+import java.util.Map;
+
+public class GameMap {
   public ArrayList< ArrayList<Site> > contents;
   public int width, height;
 
@@ -82,5 +85,37 @@ public class GameMap{
 
   public Site getSite(Location loc) {
     return contents.get(loc.y).get(loc.x);
+  }
+
+  // Distance between two coordinates, for a given ringSize
+  private static int delta(int one, int two, int ringSize) {
+    int delta = (one - two + ringSize) % ringSize;
+    if (delta * 2 > ringSize) {
+      delta = ringSize - delta;
+    }
+    return delta;
+  }
+
+  public int squareDistanceBetween(Location one, Location two) {
+    int deltaX = delta(two.x, one.x, width);
+    int deltaY = delta(two.y, one.y, height);
+
+    return (deltaX * deltaX) + (deltaY * deltaY);
+  }
+
+  public Direction moveTowards(Location source, Location sink) {
+    if (source.equals(sink)) {
+      return Direction.STILL;
+    }
+
+    Map<Direction, Integer> distanceByDirection = new HashMap<>();
+    distanceByDirection.put(Direction.EAST, (sink.x - source.x + width) % width);
+    distanceByDirection.put(Direction.WEST, (source.x - sink.x + width) % width);
+    distanceByDirection.put(Direction.NORTH, (sink.y - source.y + height) % height);
+    distanceByDirection.put(Direction.SOUTH, (source.y - sink.y + height) % height);
+
+    return distanceByDirection.entrySet().stream()
+      .min(Map.Entry.comparingByValue())
+      .get().getKey();
   }
 }
