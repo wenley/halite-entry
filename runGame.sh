@@ -2,4 +2,4 @@
 
 javac MyBot.java
 javac RandomBot.java
-./halite -d "30 30" "java MyBot" "java RandomBot"
+./halite -d "10 10" "java MyBot" "java RandomBot" -s 1924727266
