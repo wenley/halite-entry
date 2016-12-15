@@ -5,6 +5,12 @@ import java.util.Set;
 
 public class MyBot {
   public static void main(String[] args) throws java.io.IOException {
+    try {
+      Logger.initialize();
+    } catch (java.io.IOException e) {
+      // Do nothing
+    }
+
     InitPackage iPackage = Networking.getInit();
     int myID = iPackage.myID;
     GameMap gameMap = iPackage.map;
