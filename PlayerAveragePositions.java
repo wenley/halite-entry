@@ -9,8 +9,8 @@ class PlayerAveragePositions {
   private final Map<Integer, Position> playerPositions = new HashMap<>();
 
   static class Position {
-    final Location location;
-    final long mass;
+    private final Location location;
+    private final long mass;
 
     private Position(Location location, long mass) {
       this.location = location;
