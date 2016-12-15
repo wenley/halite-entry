@@ -12,6 +12,10 @@ public class Location {
     y = l.y;
   }
 
+  public String toString() {
+    return String.format("(%d, %d)", x, y);
+  }
+
   public int x() {
     return x;
   }

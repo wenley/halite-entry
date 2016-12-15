@@ -48,6 +48,7 @@ class PlayerAveragePositions {
 
   /** On the torus, where is the strength-weighted average position of each player? */
   private void computeSinkLocations() {
+    Logger.log("Computing player locations...");
     long[] weightedX = new long[playerCount + 1];
     long[] weightedY = new long[playerCount + 1];
     long[] totalMass = new long[playerCount + 1];
@@ -64,10 +65,10 @@ class PlayerAveragePositions {
     }
 
     for (int owner = 1; owner <= playerCount; owner++) {
-      long avgX = weightedX[owner] / totalMass[owner];
-      long avgY = weightedY[owner] / totalMass[owner];
+      long avgX = weightedX[owner] / (totalMass[owner] + 1);
+      long avgY = weightedY[owner] / (totalMass[owner] + 1);
       Location avgLocation = new Location((int) avgX, (int) avgY);
-      playerPositions.put(owner, new Position(avgLocation, totalMass[owner]));
+      playerPositions.put(owner, new Position(avgLocation, totalMass[owner] + 1));
     }
   }
 }

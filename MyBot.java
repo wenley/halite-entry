@@ -25,23 +25,36 @@ public class MyBot {
       }
     }
     int playerCount = playerIds.size();
+    int frameCount = 0;
+
+    Logger.log("Finished Initializing!");
 
     while(true) {
+      Logger.log("Processing frame " + frameCount);
       ArrayList<Move> moves = new ArrayList<Move>();
 
       gameMap = Networking.getFrame();
+      Logger.log("Got map from network:");
+      gameMap.log();
       strategy = new GrowthStrategy(gameMap, myID, playerCount);
+      Logger.log("Finished initializing strategy");
 
       for(int y = 0; y < gameMap.height; y++) {
         for(int x = 0; x < gameMap.width; x++) {
+          Logger.log(String.format("Processing position (%d, %d)", x, y));
+
           Site site = gameMap.getSite(new Location(x, y));
+
           if(site.owner == myID) {
             Direction dir = strategy.recommendedDirection(x, y);
             moves.add(new Move(new Location(x, y), dir));
           }
         }
       }
+      Logger.log("Frame to send:");
+      Logger.log(moves.toString());
       Networking.sendFrame(moves);
+      frameCount++;
     }
   }
 }

@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class GameMap {
   public ArrayList< ArrayList<Site> > contents;
@@ -22,6 +24,17 @@ public class GameMap {
         row.add(new Site());
       }
       contents.add(row);
+    }
+  }
+
+  public void log() {
+    for (int y = 0; y < height; y++) {
+      StringBuilder line = new StringBuilder();
+      for (int x = 0; x < width; x++) {
+        Site site = getSite(new Location(x, y));
+        line.append(String.format("%d ", site.owner));
+      }
+      Logger.log(line.toString());
     }
   }
 
@@ -76,6 +89,14 @@ public class GameMap {
       }
     }
     return l;
+  }
+
+  public Set<Site> sitesAdjacentTo(Location location) {
+    Set<Site> sites = new HashSet<>();
+    for (Direction direction : Direction.CARDINALS) {
+      sites.add(getSite(getLocation(location, direction)));
+    }
+    return sites;
   }
 
   public Site getSite(Location loc, Direction dir) {
