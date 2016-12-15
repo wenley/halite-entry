@@ -12,10 +12,10 @@ public class Location {
     y = l.y;
   }
 
-  public int getX() {
+  public int x() {
     return x;
   }
-  public int getY() {
+  public int y() {
     return y;
   }
 
@@ -25,11 +25,18 @@ public class Location {
     return (deltaX * deltaX) + (deltaY * deltaY);
   }
 
-  public Comparator<Location> closestToMe() {
-    return new Comparator<Location>() {
+  // Lazy initialize to save memory
+  private Comparator<Location> distanceComparator;
+
+  public Comparator<Location> comparingByDistance() {
+    if (distanceComparator != null) {
+      return distanceComparator;
+    }
+    distanceComparator = new Comparator<Location>() {
       public int compare(Location one, Location two) {
         return two.squareDistanceTo(Location.this) - one.squareDistanceTo(Location.this);
       }
     };
+    return distanceComparator;
   }
 }
