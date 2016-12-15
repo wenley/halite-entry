@@ -5,7 +5,7 @@ public class Logger {
   private static final boolean disableLogs = false;
 
   public static void initialize() throws java.io.IOException {
-    writer = new PrintWriter("my-bot.txt", "UTF-8");
+    writer = new PrintWriter("my-bot.log", "UTF-8");
   }
 
   public static void log(String message) {
