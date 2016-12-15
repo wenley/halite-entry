@@ -39,7 +39,8 @@ class PlayerAveragePositions {
 
   public Position positionForOwner(int owner) {
     if (owner > playerCount) {
-      throw new RuntimeException(String.format("%d vs. player count %d", owner, playerCount));
+      return SoftErrors.throwOrDefault(new Position(new Location(0, 0), 0),
+          new RuntimeException(String.format("%d vs. player count %d", owner, playerCount)));
     }
 
     return playerPositions.get(owner);

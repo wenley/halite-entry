@@ -42,7 +42,7 @@ public enum Direction {
       case SOUTH:
         return NORTH;
       default:
-        throw new RuntimeException("Unknown direction " + this.name());
+        return SoftErrors.throwOrDefault(STILL, new RuntimeException("Unknown direction " + this.name()));
     }
   }
 }
