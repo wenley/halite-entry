@@ -16,6 +16,14 @@ class PlayerAveragePositions {
       this.location = location;
       this.mass = mass;
     }
+
+    Location getLocation() {
+      return location;
+    }
+
+    long getMass() {
+      return mass;
+    }
   }
 
   PlayerAveragePositions(GameMap gameMap, int playerCount) {
@@ -23,6 +31,10 @@ class PlayerAveragePositions {
     this.playerCount = playerCount;
 
     computeSinkLocations();
+  }
+
+  public Set<Map.Entry<Integer, Position>> positions() {
+    return playerPositions.entrySet();
   }
 
   public Position positionForOwner(int owner) {
