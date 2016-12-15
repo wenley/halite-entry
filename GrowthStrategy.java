@@ -9,7 +9,7 @@ public class GrowthStrategy {
   private final int playerCount;
 
   // x coordinate -> y coordinate -> direction -> weight of recommendation [0.0, Infinity)
-  private final Map<Integer, Map<Integer, Map<Direction, Double>>> moveMap = new HashMap<>();
+  private final Map<Integer, Map<Integer, MoveMap>> moveMap = new HashMap<>();
 
   public GrowthStrategy(GameMap gameMap, int myID, int playerCount) {
     this.gameMap = gameMap;
@@ -26,18 +26,19 @@ public class GrowthStrategy {
       for (int x = 0; x < gameMap.width; x++) {
         Location myLocation = new Location(x, y);
         Site site = gameMap.getSite(myLocation);
+        MoveMap locationMap = moveMapFor(x, y);
 
         // Bulk up weak sites
         // Vulnerable to invaders; want to move losers towards invaders
         if (site.strength < site.production * 5) {
-          insertAdd(x, y, Direction.STILL, 1.0);
+          locationMap.putAdd(Direction.STILL, 1.0);
         }
 
         // Move towards neutral territory when you can take it over
         for (Direction direction : Direction.CARDINALS) {
           Site otherSite = gameMap.getSite(gameMap.getLocation(myLocation, direction));
           if (otherSite.owner == 0 && otherSite.strength < site.strength) {
-            insertAdd(x, y, direction, 1.0);
+            locationMap.putAdd(direction, 1.0);
           }
         }
 
@@ -60,26 +61,18 @@ public class GrowthStrategy {
             .map(location -> gameMap.moveTowards(myLocation, location))
             .orElse(awayFromSelf);
 
-          insertAdd(x, y, towardsEnemy, numAdjacentEnemies);
+          locationMap.putAdd(towardsEnemy, numAdjacentEnemies);
         }
       }
     }
   }
 
-  private void insertAdd(int x, int y, Direction direction, double value) {
-    Map<Direction, Double> map = moveMapFor(x, y);
-    if (!map.containsKey(direction)) {
-      map.put(direction, 0.0);
-    }
-    map.put(direction, map.get(direction) + value);
-  }
-
-  public Map<Direction, Double> moveMapFor(int x, int y) {
+  public MoveMap moveMapFor(int x, int y) {
     if (!moveMap.containsKey(x)) {
       moveMap.put(x, new HashMap<>());
     }
     if (!moveMap.get(x).containsKey(y)) {
-      moveMap.get(x).put(y, new HashMap<>());
+      moveMap.get(x).put(y, new MoveMap());
     }
     return moveMap.get(x).get(y);
   }
