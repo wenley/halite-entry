@@ -47,9 +47,13 @@ class PlayerAveragePositions {
   }
 
   /** On the torus, where is the strength-weighted average position of each player? */
+  // Find global minima
+  // of mean-mass-square-distance
+  // 1. Define value of function for given location
+  // 2. Write walker to find minimum, initialize with center ignoring mass?
+  //
   // TODO: How to make this torus-sensitive?
   private void computeSinkLocations() {
-    Logger.log("Computing player locations...");
     long[] weightedX = new long[playerCount + 1];
     long[] weightedY = new long[playerCount + 1];
     long[] totalMass = new long[playerCount + 1];
@@ -66,10 +70,12 @@ class PlayerAveragePositions {
     }
 
     for (int owner = 1; owner <= playerCount; owner++) {
+      MinimumMassDistanceWalker walker = new MinimumMassDistanceWalker(gameMap, owner);
       long avgX = weightedX[owner] / (totalMass[owner] + 1);
       long avgY = weightedY[owner] / (totalMass[owner] + 1);
-      Location avgLocation = new Location((int) avgX, (int) avgY);
-      playerPositions.put(owner, new Position(avgLocation, totalMass[owner] + 1));
+      Location guessedAverageLocation = new Location((int) avgX, (int) avgY);
+      Location localMinimumAverageLocation = walker.minimumMassDistance(guessedAverageLocation);
+      playerPositions.put(owner, new Position(localMinimumAverageLocation, totalMass[owner] + 1));
     }
   }
 }
