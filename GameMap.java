@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class GameMap {
   public ArrayList< ArrayList<Site> > contents;
@@ -129,14 +130,34 @@ public class GameMap {
       return Direction.STILL;
     }
 
-    Map<Direction, Integer> distanceByDirection = new HashMap<>();
-    distanceByDirection.put(Direction.EAST, (sink.x - source.x + width) % width);
-    distanceByDirection.put(Direction.WEST, (source.x - sink.x + width) % width);
-    distanceByDirection.put(Direction.NORTH, (sink.y - source.y + height) % height);
-    distanceByDirection.put(Direction.SOUTH, (source.y - sink.y + height) % height);
+    Map<Direction, Integer> horizontalDistanceByDirection = new HashMap<>();
+    horizontalDistanceByDirection.put(Direction.EAST, (sink.x - source.x + width) % width);
+    horizontalDistanceByDirection.put(Direction.WEST, (source.x - sink.x + width) % width);
 
-    return distanceByDirection.entrySet().stream()
-      .min(Map.Entry.comparingByValue())
+    Map<Direction, Integer> verticalDistanceByDirection = new HashMap<>();
+    verticalDistanceByDirection.put(Direction.NORTH, (source.y - sink.y + height) % height);
+    verticalDistanceByDirection.put(Direction.SOUTH, (sink.y - source.y + height) % height);
+
+    return Stream.of(
+        horizontalDistanceByDirection.entrySet().stream()
+          .min(Map.Entry.comparingByValue())
+          .get(),
+        verticalDistanceByDirection.entrySet().stream()
+          .min(Map.Entry.comparingByValue())
+          .get()
+        )
+      .filter(entry -> entry.getValue() != 0)
+      .max(Map.Entry.comparingByValue())
       .get().getKey();
+  }
+
+  public static void main(String[] args) {
+    GameMap map = new GameMap(10, 10);
+
+    Location source = new Location(3, 5);
+    Location sink = new Location(5, 6);
+    Direction d = map.moveTowards(source, sink);
+
+    System.out.println(String.format("%s to %s is %s", source.toString(), sink.toString(), d.name()));
   }
 }

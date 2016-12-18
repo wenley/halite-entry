@@ -2,7 +2,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class DiveIntoEnemyCenterHeuristic implements GrowthStrategy.Heuristic {
-  private static final int STRENGTH_THRESHOLD = 100;
+  private static final int STRENGTH_THRESHOLD = 5;
   private static final double WEIGHT = 1.0;
 
   private final int myID;
@@ -15,6 +15,7 @@ public class DiveIntoEnemyCenterHeuristic implements GrowthStrategy.Heuristic {
 
   public void applyTo(GameMap gameMap, Location myLocation, MoveMap moveMap) {
     // Don't go picking a fight unless you have the strength
+    Logger.log(String.format("Computing Dive heuristic for %s of strength %d", myLocation, gameMap.getSite(myLocation).strength));
     if (gameMap.getSite(myLocation).strength < STRENGTH_THRESHOLD) {
       return;
     }

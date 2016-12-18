@@ -24,24 +24,21 @@ public class GrowthStrategy {
   }
 
   public void computeRecommendedMoves() {
-    Logger.log("Computing moves...");
     PlayerAveragePositions playerAveragePositions = new PlayerAveragePositions(gameMap, playerCount);
-    Logger.log("Processed positions...");
     Set<Heuristic> heuristics = new HashSet<>();
     heuristics.add(AccumulateStrengthHeuristic.INSTANCE);
     heuristics.add(ConquerNeutralTerritoryHeuristic.INSTANCE);
-    // heuristics.add(new DiveIntoEnemyCenterHeuristic(myID, playerAveragePositions));
-    Logger.log("Collected heuristics...");
+    heuristics.add(new DiveIntoEnemyCenterHeuristic(myID, playerAveragePositions));
 
     for (int y = 0; y < gameMap.height; y++) {
       for (int x = 0; x < gameMap.width; x++) {
-        Logger.log(String.format("Recommending for (%d, %d)...", x, y));
         Location myLocation = new Location(x, y);
         Site site = gameMap.getSite(myLocation);
         if (site.owner != myID) {
           continue;
         }
 
+        Logger.log(String.format("Recommending for (%d, %d)...", x, y));
         MoveMap locationMap = moveMapFor(x, y);
 
         for (Heuristic heuristic : heuristics) {
