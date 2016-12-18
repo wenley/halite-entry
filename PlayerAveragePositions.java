@@ -47,12 +47,6 @@ class PlayerAveragePositions {
   }
 
   /** On the torus, where is the strength-weighted average position of each player? */
-  // Find global minima
-  // of mean-mass-square-distance
-  // 1. Define value of function for given location
-  // 2. Write walker to find minimum, initialize with center ignoring mass?
-  //
-  // TODO: How to make this torus-sensitive?
   private void computeSinkLocations() {
     long[] weightedX = new long[playerCount + 1];
     long[] weightedY = new long[playerCount + 1];
