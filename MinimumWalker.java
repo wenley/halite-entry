@@ -1,12 +1,13 @@
+import java.util.function.Function;
 
-public class MinimumMassDistanceWalker {
+public class MinimumWalker {
   private final GameMap gameMap;
-  private final int owner;
   private final long[][] cachedEvaluations;
+  private final Function<Location, Long> valueAt;
 
-  public MinimumMassDistanceWalker(GameMap gameMap, int owner) {
+  public MinimumWalker(GameMap gameMap, Function<Location, Long> valueAt) {
     this.gameMap = gameMap;
-    this.owner = owner;
+    this.valueAt = valueAt;
 
     cachedEvaluations = new long[gameMap.width][gameMap.height];
   }
@@ -40,8 +41,10 @@ public class MinimumMassDistanceWalker {
       return cachedValue;
     }
 
-    // TODO: Actually compute value
+    long value = valueAt.apply(location);
 
-    return 0;
+    cachedEvaluations[location.x][location.y] = value;
+
+    return value;
   }
 }
