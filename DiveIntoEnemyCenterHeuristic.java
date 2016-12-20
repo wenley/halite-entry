@@ -3,7 +3,8 @@ import java.util.Map;
 
 public class DiveIntoEnemyCenterHeuristic implements GrowthStrategy.Heuristic {
   private static final int STRENGTH_THRESHOLD = 5;
-  private static final double WEIGHT = 1.0;
+  // Weighted slightly more than AccumulateStrength
+  private static final double WEIGHT = 1.1;
 
   private final int myID;
   private final PlayerAveragePositions playerAveragePositions;
@@ -32,14 +33,21 @@ public class DiveIntoEnemyCenterHeuristic implements GrowthStrategy.Heuristic {
       .count();
 
     if (numAdjacentEnemies > 0) {
+      Logger.log(String.format("Counted %d enemies adjacent to %s", numAdjacentEnemies, myLocation.toString()));
       // By default, move away from own cluster
-      Direction awayFromSelf = gameMap.moveTowards(playerAveragePositions.positionForOwner(myID).getLocation(), myLocation);
+      Location myCluster = playerAveragePositions.positionForOwner(myID).getLocation();
+      Direction awayFromSelf = gameMap.moveTowards(myCluster, myLocation);
+
       Direction towardsEnemy = playerAveragePositions.positions().stream()
         .filter(entry -> entry.getKey() != myID)
         .map(Map.Entry::getValue)
         .map(PlayerAveragePositions.Position::getLocation)
         .min(myLocation.comparingByDistance())
-        .map(location -> gameMap.moveTowards(myLocation, location))
+        .map(location -> {
+          Direction d = gameMap.moveTowards(myLocation, location);
+          Logger.log(String.format("%s should move %s to %s", myLocation.toString(), d.name(), location));
+          return d;
+        })
         .orElse(awayFromSelf);
 
       moveMap.putAdd(towardsEnemy, numAdjacentEnemies * WEIGHT);
