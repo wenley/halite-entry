@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -26,6 +27,40 @@ public class GameMap {
       }
       contents.add(row);
     }
+  }
+
+  private static class LocationIterator implements Iterator<Location> {
+    private final GameMap gameMap;
+    private int x = 0;
+    private int y = 0;
+
+    private LocationIterator(GameMap gameMap) {
+      this.gameMap = gameMap;
+    }
+
+    @Override public boolean hasNext() {
+      return y < gameMap.height;
+    }
+
+    @Override public Location next() {
+      Location value = new Location(x, y);
+
+      x++;
+      if (x == gameMap.width) {
+        x = 0;
+        y++;
+      }
+
+      return value;
+    }
+  }
+
+  public Iterable<Location> locations() {
+    return new Iterable<Location>() {
+      public Iterator<Location> iterator() {
+        return new LocationIterator(GameMap.this);
+      }
+    };
   }
 
   public void log() {
