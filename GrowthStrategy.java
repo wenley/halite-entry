@@ -38,11 +38,9 @@ public class GrowthStrategy {
           continue;
         }
 
-        Logger.log(String.format("Recommending for (%d, %d)...", x, y));
         MoveMap locationMap = moveMapFor(x, y);
 
         for (Heuristic heuristic : heuristics) {
-          Logger.log("Applying heuristic " + heuristic.getClass().getSimpleName());
           heuristic.applyTo(gameMap, myLocation, locationMap);
         }
       }

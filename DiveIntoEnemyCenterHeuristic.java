@@ -15,7 +15,6 @@ public class DiveIntoEnemyCenterHeuristic implements GrowthStrategy.Heuristic {
 
   public void applyTo(GameMap gameMap, Location myLocation, MoveMap moveMap) {
     // Don't go picking a fight unless you have the strength
-    Logger.log(String.format("Computing Dive heuristic for %s of strength %d", myLocation, gameMap.getSite(myLocation).strength));
     if (gameMap.getSite(myLocation).strength < STRENGTH_THRESHOLD) {
       return;
     }
