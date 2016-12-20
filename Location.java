@@ -12,7 +12,21 @@ public class Location {
     y = l.y;
   }
 
-  public String toString() {
+  @Override public boolean equals(Object other) {
+    if (this == other) return true;
+    if (!(other instanceof Location)) return false;
+
+    Location that = (Location) other;
+    return this.x == that.x && this.y == that.y;
+  }
+
+  @Override public int hashCode() {
+    int result = x;
+    result = 31 * result + y;
+    return result;
+  }
+
+  @Override public String toString() {
     return String.format("(%d, %d)", x, y);
   }
 
