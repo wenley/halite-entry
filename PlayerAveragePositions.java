@@ -17,6 +17,10 @@ class PlayerAveragePositions {
       this.mass = mass;
     }
 
+    public String toString() {
+      return String.format("(mass %d at %s)", mass, location);
+    }
+
     Location getLocation() {
       return location;
     }
