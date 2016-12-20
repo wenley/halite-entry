@@ -68,14 +68,19 @@ class PlayerAveragePositions {
     }
 
     for (int owner = 1; owner <= playerCount; owner++) {
-      long avgX = weightedX[owner] / (totalMass[owner] + 1);
-      long avgY = weightedY[owner] / (totalMass[owner] + 1);
+      if (totalMass[owner] == 0) {
+        // Player has been eliminated
+        continue;
+      }
+
+      long avgX = weightedX[owner] / totalMass[owner];
+      long avgY = weightedY[owner] / totalMass[owner];
       Location guessedAverageLocation = new Location((int) avgX, (int) avgY);
 
       MinimumWalker walker = new MinimumWalker(gameMap, new MassSquareDistance(gameMap, owner));
       Location localMinimumAverageLocation = walker.minimumMassDistance(guessedAverageLocation);
 
-      playerPositions.put(owner, new Position(localMinimumAverageLocation, totalMass[owner] + 1));
+      playerPositions.put(owner, new Position(localMinimumAverageLocation, totalMass[owner]));
     }
   }
 }
