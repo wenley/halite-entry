@@ -29,6 +29,40 @@ public class GameMap {
     }
   }
 
+  public static class Builder {
+    private int width, height;
+    private Map<Location, Site> cells = new HashMap<>();
+
+    public Builder() {
+      this(0, 0);
+    }
+
+    public Builder(int width, int height) {
+      this.width = width;
+      this.height = height;
+    }
+
+    public GameMap build() {
+      GameMap map = new GameMap(width, height);
+      for (Map.Entry<Location, Site> entry : cells.entrySet()) {
+        Location location = entry.getKey();
+        map.contents.get(location.y).set(location.x, entry.getValue());
+      }
+      return map;
+    }
+
+    public Builder withDimensions(int width, int height) {
+      this.width = width;
+      this.height = height;
+      return this;
+    }
+
+    public Builder addSite(int x, int y, int owner, int strength, int production) {
+      cells.put(new Location(x, y), new Site(owner, strength, production));
+      return this;
+    }
+  }
+
   private static class LocationIterator implements Iterator<Location> {
     private final GameMap gameMap;
     private int x = 0;
