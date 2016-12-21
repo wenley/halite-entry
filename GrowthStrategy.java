@@ -29,6 +29,7 @@ public class GrowthStrategy {
     heuristics.add(AccumulateStrengthHeuristic.INSTANCE);
     heuristics.add(ConquerNeutralTerritoryHeuristic.INSTANCE);
     heuristics.add(new DiveIntoEnemyCenterHeuristic(myID, playerAveragePositions));
+    heuristics.add(new MigrateStrengthToBorderHeuristic(gameMap, myID));
 
     for (int y = 0; y < gameMap.height; y++) {
       for (int x = 0; x < gameMap.width; x++) {
